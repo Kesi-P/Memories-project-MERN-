@@ -4,20 +4,34 @@ import { Avatar, Button, Container, Grid, Paper, TextField, Typography } from '@
 import { GoogleLogin } from 'react-google-login'
 import { useDispatch } from 'react-redux'
 import { useHistory} from 'react-router-dom'
+import { signin, signup } from '../../actions/auth'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Icon from './icon'
 import Input from './input'
 import useStyles from './styles'
 
+const initialState ={ firstName: '', lastName: '', email: '', password: '', comfirmPassword: ''}
 const Auth = () => {
     const classes = useStyles();
     const [showPassword, setshowPassword] = useState(false);
     const [isSignup, setisSignup] = useState(false)
+    const [formData, setformData] = useState(initialState)
     const dispatch = useDispatch();
     const history = useHistory()
 
-    const handleSubmit = () => {};
-    const handleChange = () => {};
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(isSignup){
+            dispatch(signup(formData, history))
+        }else{
+            dispatch(signin(formData, history))
+        }
+    };
+
+    const handleChange = (e) => {
+        e.preventDefault();
+        setformData({ ...formData, [e.target.name]: e.target.value})
+    };
     const handleShowPassword = () => setshowPassword((prevshowPassword) => !prevshowPassword);
     const switchMode = () =>  {
         setisSignup((previsSignup) => !previsSignup)
@@ -53,8 +67,8 @@ const Auth = () => {
                         {
                             isSignup && (
                                 <>
-                                    <Input name='firstname' label='First Name' handleChange={handleChange} autoFocus half />
-                                    <Input name='firstname' label='First Name' handleChange={handleChange}  half />
+                                    <Input name='firstName' label='First Name' handleChange={handleChange} autoFocus half />
+                                    <Input name='lastName' label='Last Name' handleChange={handleChange}  half />
                                 </>
                             )
                         }
