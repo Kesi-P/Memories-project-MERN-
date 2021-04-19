@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 import postRoutes from './routes/posts.js'
+import userRoutes from './routes/users.js'
 const app = express();
 
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 //add a prefix of url start homepage from../posts
 app.use('/posts', postRoutes);
+app.use('/user', userRoutes)
 //conect to db
 // https://www.mongodb.com/cloud/atlas
 const CONNECTION_URL ='mongodb+srv://Kesi-P:932411@cluster0.kuadk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
