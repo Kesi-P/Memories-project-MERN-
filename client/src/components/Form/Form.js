@@ -8,51 +8,61 @@ import { createPost, updatePost } from '../../actions/posts';
 
 const Form = ({currentId, setcurrentId}) => {
     const [postData, setPostData] = useState({
-        creator:'', title:'', message:'', tags:'', selectedFile:''
+         title:'', message:'', tags:'', selectedFile:''
     })
-
-    const post = useSelector(state => 
-        //if else
-        currentId ? 
-        state.posts.find( (p) => p._id === currentId ) : null
-        )
+    const post = useSelector((state) => (currentId ? state.posts.find((message) => message._id === currentId) : null));
+    const dispatch = useDispatch();
+    const classes = useStyles();
+    const user = JSON.parse(localStorage.getItem('profile'));
 
     useEffect(() => {
         if(post)
             setPostData(post)
     }, [post])    
-
-    const classes = useStyles(); 
-
-    const dispatch = useDispatch();
-
+ 
+    const clear = () => {
+        setcurrentId(0)
+        setPostData({ title:'', message:'', tags:'', selectedFile:'' })
+    }
+    
     const handleSubmit = (e) => {
         
         e.preventDefault();
-        if(currentId){
-            dispatch(updatePost(currentId, postData))
+        if(currentId === 0){
+            dispatch(updatePost(currentId, {...postData, name: user?.result?.name}))
+            clear()
         }else{
-            dispatch(createPost(postData))
+            //add name properties
+            dispatch(createPost({...postData, name: user?.result?.name}))
+            clear()
         }   
         
     }
 
-    const clear = () => {
-
+   
+    
+    if(!user?.result?.name){
+        return(
+            <Paper className={classes.paper}>
+                <Typography variant='h6' align ='center'>
+                    Please Sign In
+                </Typography>
+            </Paper>
+        )
     }
 
     return (
         <Paper className={classes.paper}>
             <form autoComplete='off' noValidate className={`${classes.form} ${classes.root}`} onSubmit={handleSubmit}>
                 <Typography variant='h6'>Creating a Memory</Typography>
-                <TextField 
+                {/* <TextField 
                 name='creator' 
                 variant='outlined' 
                 label='Creator' 
                 fullWidth 
                 value={postData.creator} 
                 //also add all the rest of value that not been changed
-                onChange={(e) => setPostData({ ...postData, creator: e.target.value})} />
+                onChange={(e) => setPostData({ ...postData, creator: e.target.value})} /> */}
                 <TextField 
                 name='title' 
                 variant='outlined' 
